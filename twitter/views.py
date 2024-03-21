@@ -1,12 +1,39 @@
 from django.shortcuts import render, redirect
-from .models import Profile
+from .models import Profile, Meep
 from django.contrib import messages
+
+from .form import MeepForm,SignUp
+
+from django.contrib.auth import login, logout, authenticate
+
 
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html', {})
+    meeps = {}
+    
+    
+    meeps = Meep.objects.all().order_by('-created_at')
+    if request.user.is_authenticated:
+
+        
+        form = MeepForm
+
+        if request.method == "POST":
+            form = MeepForm(request.POST)
+
+            if form.is_valid():
+                meep = form.save(commit=False)
+                meep.user = request.user
+                meep.save()
+
+                messages.success(request, ("Meep Published!"))
+                return redirect('home')
+        
+        return render(request, 'home.html', {"meeps":meeps, "form":form})
+    else:
+        return render(request, 'home.html', {"meeps":meeps})
 
 def profile_list(request):
     if request.user.is_authenticated:
@@ -21,7 +48,7 @@ def profile_list(request):
 def profile(request, pk):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user_id=pk)
-
+        meeps = Meep.objects.filter(user_id=pk).order_by('-created_at')
         if request.method == "POST":
             current_user_profile = request.user.profile
             action = request.POST['follow']
@@ -31,7 +58,49 @@ def profile(request, pk):
             elif action == "follow":
                 current_user_profile.follows.add(profile)
 
-        return render(request, 'profile.html',{"profile":profile})
+        return render(request, 'profile.html',{"profile":profile, "meeps": meeps})
     else:
         messages.success(request, ("User must Logged in to view this page"))
         return redirect('home')
+    
+
+def login_user(request):
+
+    if request.method=="POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, ("You have been loggedin!!"))
+        else:
+            messages.success(request, ("The given username and password doesnot match"))
+
+        return redirect('home')
+    
+    else:
+        return render(request, 'login.html')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
+
+
+def register_user(request):
+    form = SignUp
+    if request.method == "POST":
+        form = SignUp(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request,user)
+            messages.success(request, ("The Register is successful"))
+            return redirect('home')
+        else:
+            print("invalid form")
+
+
+    return render(request, 'register.html',{ "form":form })
