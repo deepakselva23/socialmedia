@@ -1,6 +1,48 @@
 
 {% extends 'base.html' %}
 
+
 {% block content %}
-<h1>Meeps!</h1>
+
+
+            <h1>Meeps!</h1>
+            
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-8">
+                        {% for meep in meeps %}
+                            <div class="alert alert-dark" role="alert">
+                                <strong>{{ meep.body }}</strong>
+
+                                <small class="text-muted">
+                                    {{ meep.created_at }} By 
+                                    {{ meep.user }}
+
+                                </small>
+                            </div>
+                            <br><br>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="col-4">
+                        {% if request.user.is_authenticated %}
+
+                        <form  method="POST">
+                            {% csrf_token %}
+
+                            {{form.as_p}}
+
+                            <button type="submit" class="btn btn-outline-secondary">Post</button>
+
+                        </form>
+                            
+
+                            
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
 {% endblock %}
