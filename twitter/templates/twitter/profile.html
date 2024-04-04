@@ -10,19 +10,15 @@
             <div class="col-8">
                 <h1>{{profile.user.username}}'s Profile </h1>
 
-
                 {% for meep in meeps %}
-
                     <div class="alert alert-dark" role="alert">
                         <strong>{{ meep.body }}</strong>
+                        <small class="text-muted">
+                            {{ meep.created_at }} By 
+                            {{ meep.user }}
 
-                                <small class="text-muted">
-                                    {{ meep.created_at }} By 
-                                    {{ meep.user }}
-
-                                </small>
+                        </small>
                     </div>
-
 
                 <br><br>
                 {% endfor %}
@@ -31,10 +27,13 @@
             </div>
 
             
-
-
             <div class="col-4">
 
+                {% if profile.profile_image %}
+                    <!-- {{ profile.profile_image.url }} -->
+                    <img src="{{ profile.profile_image.url }}" alt="" width="200" height="150">
+                    <br><br>
+                {% endif %}
 
                 <div class="card">
                     <h5 class="card-header">Following</h5>
@@ -80,6 +79,11 @@
                     {% endif %}
 
                 </form>
+                <br>
+
+                {% if request.user.id == profile.user.id %}
+                    <a href="{% url 'update_user' %}" class="btn btn-outline-secondary">Update Profile</a>
+                {% endif %}
 
             </div>
 

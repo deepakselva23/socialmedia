@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from .models import Profile, Meep
 from django.contrib import messages
 
-from .form import MeepForm,SignUp
+from .form import MeepForm,SignUp, ProfilePicForm
 
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 
 
 
@@ -102,5 +103,23 @@ def register_user(request):
         else:
             print("invalid form")
 
-
     return render(request, 'register.html',{ "form":form })
+
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        profile_user = Profile.objects.get(user__id= request.user.id)
+        user_form = SignUp(request.POST or None, request.FILES or None , instance=current_user)
+        profile_form = ProfilePicForm(request.POST or None, request.FILES or None , instance=profile_user)
+
+        # if request.method == "POST":
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            login(request,current_user)
+            return redirect('home')
+        return render(request, 'update_profile.html',{"user_form":user_form , "profile_form": profile_form  })
+    else:
+        messages.success(request, ("You must logged In to access this page"))
+        return redirect('home')
