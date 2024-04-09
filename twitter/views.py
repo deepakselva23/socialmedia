@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Profile, Meep
 from django.contrib import messages
 
@@ -120,6 +120,21 @@ def update_user(request):
             login(request,current_user)
             return redirect('home')
         return render(request, 'update_profile.html',{"user_form":user_form , "profile_form": profile_form  })
+    else:
+        messages.success(request, ("You must logged In to access this page"))
+        return redirect('home')
+    
+def like_meep(request, pk):
+
+    if request.user.is_authenticated:
+        meep = get_object_or_404(Meep, id=pk)
+        
+        if meep.like.filter(id= request.user.id):
+            meep.like.remove(request.user)
+        else:
+            meep.like.add(request.user)
+        print("refer page ",)
+        return redirect(request.META.get('HTTP_REFERER'))
     else:
         messages.success(request, ("You must logged In to access this page"))
         return redirect('home')
