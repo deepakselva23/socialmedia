@@ -28,12 +28,15 @@
                                     <small class="text-muted">
                                         {{ meep.created_at }} By 
                                         {{ meep.user }} - 
-                                        {{ meep.number_of_likes }}  Likes
+                                        {{ meep.number_of_likes }} 
                                         {% if user in meep.like.all %}
-                                            <a href="{% url 'like_meep' meep.id %}">UnLike</a>
+                                            <a href="{% url 'like_meep' meep.id %}"><img src="{% static 'images/heart-unlike.png' %}" alt="" width="15" height="15"></a>
                                         {% else %}
-                                        <a href="{% url 'like_meep' meep.id %}">Like</a>
+                                        <a href="{% url 'like_meep' meep.id %}"><img src="{% static 'images/heart-like.png' %}" alt="" width="15" height="15"></a>
                                         {% endif %}
+
+                                        &nbsp;&nbsp;
+                                                <a href="{% url 'meep_show' meep.id %}"> <img src="{% static 'images/share-square.png' %}" alt="" width="15" height="15"> </a>
             
                                     </small>
                                 </div>

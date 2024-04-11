@@ -10,7 +10,6 @@
             <div class="container text-center">
                 <div class="row">
                     <div class="col-8">
-                        {% for meep in meeps %}
                             <div class="alert alert-dark" role="alert">
                                 <div class="container">
                                     <div class="row">
@@ -29,7 +28,7 @@
                                             <small class="text-muted">
                                                 {{ meep.created_at }} By 
                                                 {{ meep.user }} - 
-                                                {{ meep.number_of_likes }} 
+                                                {{ meep.number_of_likes }}  Likes
 
                                                 <!-- <div> -->
                                                     {% if user in meep.like.all %}
@@ -38,8 +37,6 @@
                                                     <a href="{% url 'like_meep' meep.id %}"><img src="{% static 'images/heart-like.png' %}" alt="" width="15" height="15"></a>
                                                     {% endif %}
                                                 <!-- </div> -->
-                                                &nbsp;&nbsp;
-                                                <a href="{% url 'meep_show' meep.id %}"> <img src="{% static 'images/share-square.png' %}" alt="" width="15" height="15"> </a>
                                                 
 
 
@@ -51,24 +48,23 @@
                                 
                             </div>
                             <br><br>
-                        {% endfor %}
 
                     </div>
 
                     <div class="col-4">
                         {% if request.user.is_authenticated %}
+                            {% if form %}
 
-                        <form  method="POST">
-                            {% csrf_token %}
+                        
+                            <form  method="POST">
+                                {% csrf_token %}
 
-                            {{form.as_p}}
+                                {{form.as_p}}
 
-                            <button type="submit" class="btn btn-outline-secondary">Post</button>
+                                <button type="submit" class="btn btn-outline-secondary">Post</button>
 
-                        </form>
-                            
-
-                            
+                            </form>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
