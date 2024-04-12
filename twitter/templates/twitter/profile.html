@@ -21,6 +21,9 @@
                                     {% else %}
                                         <img src="{% static 'images/default_profile_pic.jpg' %}" class="img-fluid rounded-start" alt="Profile Image" width="150" height="150">
                                     {% endif %}
+
+
+                                   
                                 </div>
 
                                 <div class="col-8">
@@ -60,6 +63,32 @@
                     <img src="{{ profile.profile_image.url }}" alt="" width="200" height="150" class="rounded-circle">
                     <br><br>
                 {% endif %}
+
+                {% if profile.homepage_link %}
+                    <a href="{{ profile.homepage_link }}" target="_blank"><img src="{% static 'images/link.png' %}" alt=""  width="20" height="20"></a>
+                {% endif %}
+                &nbsp;
+                {% if profile.facebook_link %}
+                    <a href="{{ profile.facebook_link }}" target="_blank"><img src="{% static 'images/facebook.png' %}" alt=""  width="20" height="20"></a>
+                {% endif %}
+                &nbsp;
+
+                {% if profile.instagram_link %}
+                    <a href="{{ profile.instagram_link }}" target="_blank"><img src="{% static 'images/instagram.png' %}" alt=""  width="20" height="20"></a>
+                    
+                {% endif %}
+                &nbsp;
+
+                {% if profile.linkedin_link %}
+                    <a href="{{ profile.linkedin_link }}" target="_blank"><img src="{% static 'images/linkedin.png' %}" alt="" width="20" height="20"></a>
+                {% endif %}
+                <br><br>
+
+                    {% if profile.profile_bio %}
+                        <p align="justify" >{{profile.profile_bio }}</p>
+                    {% endif %}
+                    <br><br>
+
 
                 <div class="card">
                     <h5 class="card-header">Following</h5>
