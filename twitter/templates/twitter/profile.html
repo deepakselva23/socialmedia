@@ -95,11 +95,19 @@
                     <div class="card-body">
                       <!-- <h5 class="card-title">Special title treatment</h5> -->
                       <p class="card-text">
-                        {% for following in profile.follows.all %}
+                        {% for following in profile.follows.all|slice:3 %}
                         
-                        <a href="{% url 'profile' following.user.id %}">@{{following}}</a>
+                        <a href="{% url 'profile' following.user.id %}">@{{following}}</a> 
+                        <a href="{% url 'unfollow'  following.user.id %}">
+                            <img src="{% static 'images/user-minus.png' %}" alt="" width="15">
+                        </a>
+                        
                         <br>
                         {% endfor %}</p>
+
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'follows' profile.user.id %}" class="btn btn-sm btn-outline-secondary">See more...</a>
 
                     </div>
                     
@@ -111,12 +119,25 @@
                     <h5 class="card-header">Followed By </h5>
                     <div class="card-body">
                       <p class="card-text">
-                        {% for following in profile.followed_by.all %}
+                        {% for following in profile.followed_by.all|slice:3 %}
+
 
                         <a href="{% url 'profile' following.user.id %}">@{{following}}</a>
+                        &nbsp;
+                        {% if following not in profile.follows.all %}
+                        <a href="{% url 'follow'  following.user.id %}">
+                            <img src="{% static 'images/user-plus.png' %}" alt="" width="15">
+                        </a>
+                            
+                        {% endif %}
+
                         <br>
                         {% endfor %}
                      </p>
+
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'followers' profile.user.id %}" class="btn btn-sm btn-outline-secondary">See more...</a>
 
                     </div>
                     
