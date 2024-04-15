@@ -1,0 +1,74 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+            <h1>Meeps!</h1>
+            
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-8">
+                            <div class="alert alert-dark" role="alert">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-1">
+                                            {% if meep.user.profile.profile_image  %}
+                                                <img src="{{ meep.user.profile.profile_image.url  }}" class="rounded-circle" alt="Profile Image" width="50" height="50" >
+                                            {% else %}
+                                                <img src="{% static 'images/default_profile_pic.jpg' %}" class="img-fluid rounded-start" alt="Profile Image" width="50" height="50">
+                                            {% endif %}
+
+                                        
+                                        </div>
+                                        <div class="col-8">
+                                            <strong>{{ meep.body }}</strong>
+
+                                            <small class="text-muted">
+                                                {{ meep.created_at }} By 
+                                                {{ meep.user }} - 
+                                                {{ meep.number_of_likes }}  Likes
+
+                                                <!-- <div> -->
+                                                    {% if user in meep.like.all %}
+                                                    <a href="{% url 'like_meep' meep.id %}"><img src="{% static 'images/heart-unlike.png' %}" alt="" width="15" height="15"></a>
+                                                    {% else %}
+                                                    <a href="{% url 'like_meep' meep.id %}"><img src="{% static 'images/heart-like.png' %}" alt="" width="15" height="15"></a>
+                                                    {% endif %}
+                                                <!-- </div> -->
+                                                
+
+
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            <br><br>
+
+                    <!-- </div> -->
+
+                    <!-- <div class="col-4"> -->
+                        {% if request.user.is_authenticated %}
+                            {% if form %}
+
+                        
+                            <form  method="POST">
+                                {% csrf_token %}
+
+                                {{form.as_p}}
+
+                                <button type="submit" class="btn btn-outline-secondary">Edit Meep</button>
+
+                            </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+{% endblock %}
