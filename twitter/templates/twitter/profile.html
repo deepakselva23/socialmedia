@@ -39,7 +39,15 @@
                                         {% endif %}
 
                                         &nbsp;&nbsp;
-                                                <a href="{% url 'meep_show' meep.id %}"> <img src="{% static 'images/share-square.png' %}" alt="" width="15" height="15"> </a>
+                                                <a href="{% url 'meep_show' meep.id %}"> <img src="{% static 'images/share-square.png' %}" alt="" width="15" height="15"></a>
+
+                                                {% if request.user.username == profile.user.username %}
+                                                &nbsp;&nbsp;
+                                                    <a href="{% url 'delete_meep' meep.id %}"><img src="{% static 'images/trash-bin.png' %}" alt="" width="15"></a>
+                                                &nbsp;&nbsp;
+                                                <a href="{% url 'edit_meep' meep.id %}"><img src="{% static 'images/edit.png' %}" alt="" width="15"></a>
+
+                                                {% endif %}
             
                                     </small>
                                 </div>

@@ -199,3 +199,53 @@ def meep_show(request, pk):
     else:
         messages.success(request, ("You must logged In to access this page"))
         return redirect('home')
+    
+def delete_meep(request, pk):
+    if request.user.is_authenticated:
+        meep = get_object_or_404(Meep, id=pk)
+        if meep.user.username == request.user.username:
+            meep.delete()
+            messages.success(request, ("Meep deleted successfully"))
+            return redirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.success(request, ("You are not the owner of the Meep"))
+            return redirect('home')
+    else:
+        messages.success(request, ("You must logged In to access this page"))
+        return redirect('home')
+    
+def edit_meep(request, pk):
+    if request.user.is_authenticated:
+        meep = get_object_or_404(Meep, id=pk)
+        if meep.user.username == request.user.username:
+            # form = MeepForm
+            form = MeepForm(request.POST or None, instance=meep)
+
+            if request.method == "POST":
+                
+
+                if form.is_valid():
+                    meep = form.save(commit=False)
+                    meep.user = request.user
+                    meep.save()
+                    messages.success(request, ("Meep Updated!"))
+                    return redirect('home')
+            else:
+                return render(request, 'meep_edit.html',{"meep": meep, "form": form })
+
+        else:
+            messages.success(request, ("You are not the owner of the Meep"))
+            return redirect('home')
+    else:
+        messages.success(request, ("You must logged In to access this page"))
+        return redirect('home')
+    
+def search(request):
+    if request.method == "POST":
+        search = request.POST['search']
+        searched = Meep.objects.filter(body__contains=search) 
+        return render(request, 'search.html', {'search' :search, "searched":searched})
+
+
+    else:
+        return render(request, 'search.html', {})
